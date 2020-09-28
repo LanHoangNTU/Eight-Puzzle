@@ -16,6 +16,21 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        int[][] in = {
+            {0, 8, 7},
+            {6, 5, 4},
+            {3, 2, 1}
+        };
+        
+        int[][] de = {
+            {1, 2, 3},
+            {8, 0, 4},
+            {7, 6, 5}
+        };
+        
+        State initial = new State(in);
+        initial.setLevel(0);
+        State desired = new State(de);
+        Solver.solve(initial, desired);
     }
-    
 }

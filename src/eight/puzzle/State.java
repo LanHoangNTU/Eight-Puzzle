@@ -5,7 +5,6 @@
  */
 package eight.puzzle;
 
-import java.util.Collections;
 
 /**
  *
@@ -25,18 +24,22 @@ public class State {
     public State(int[][] matrix) {
         this.matrix = matrix;
     }
-    public State newState(int x, int y, int newX, int newY){
+    public State newState(int x, int y, int newX, int newY, int level){
         State state = new State(this.matrix);
         
         //Copies datas from this State to the new State
         state.setParent(this);
-        state.setMatrix(matrix.clone());
+        int[][] clone = new int[matrix.length][];
+        for (int i = 0; i < matrix.length; i++) {
+            clone[i] = matrix[i].clone();
+        }
+        state.setMatrix(clone);
         state.setLevel(level);
-        state.setCost(-1);
         
         //Move tile by 1
-        int temp = matrix[x][y];
-        matrix[x][y] = state.getMatrix(newX, newY);
+        int temp = state.getMatrix(x, y);
+        state.setMatrix(x, y, state.getMatrix(newX, newY));
+        state.setMatrix(newX, newY, temp);
         
         //Update new blank tile coordinate
         state.setX(newX);
@@ -63,6 +66,19 @@ public class State {
         }
         else
             return -1;
+    }
+    
+    //Compare two state
+    public boolean compare(State state){
+        for (int i = 0; i < getRow(); i++) {
+            for (int j = 0; j < getCollumn(); j++) {
+                if (matrix[i][j] != state.getMatrix(i, j)) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
     }
     
     //Getters and Setters
@@ -94,6 +110,10 @@ public class State {
         this.parent = parent;
     }
 
+    public int[][] getMatrix() {
+        return matrix;
+    }
+
     public void setX(int x) {
         this.x = x;
     }
@@ -112,5 +132,17 @@ public class State {
 
     public void setMatrix(int[][] matrix) {
         this.matrix = matrix;
+    }
+    
+    public void setMatrix(int x, int y, int z) {
+        this.matrix[x][y] = z;
+    }
+    
+    public int getRow(){
+        return matrix.length;
+    }
+    
+    public int getCollumn(){
+        return matrix[0].length;
     }
 }
